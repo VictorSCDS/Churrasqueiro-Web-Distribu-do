@@ -108,6 +108,20 @@ services:
       - churrasqueiro-net
     restart: unless-stopped
 
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend-churrasqueiro
+    ports:
+      - "8080:80"
+    depends_on:
+      - gestao-service
+      - cardapio-service
+      - pedidos-service
+    networks:
+      - churrasqueiro-net
+    restart: unless-stopped
+
 volumes:
   postgres_data:
 
