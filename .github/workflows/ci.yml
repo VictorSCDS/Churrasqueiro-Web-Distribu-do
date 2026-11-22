@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+  workflow_dispatch:
+
+jobs:
+  backend:
+    name: Build ${{ matrix.service }} (Java ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: gestao-service
+            java: "21"
+          - service: cardapio-service
+            java: "21"
+          - service: pedidos-service
+            java: "17"
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Java ${{ matrix.java }} e cache do Maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+          cache-dependency-path: backend/${{ matrix.service }}/pom.xml
+
+      - name: Compilar e empacotar ${{ matrix.service }}
+        working-directory: backend/${{ matrix.service }}
+        # Usa -DskipTests enquanto os testes @SpringBootTest ainda dependem de PostgreSQL/Kafka ativos
+        run: mvn -B test-compile package -DskipTests
+
+  docker:
+    name: Validar Docker Compose e Build das Imagens
+    runs-on: ubuntu-latest
+    needs: backend
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Validar sintaxe do docker-compose.yml
+        run: docker compose config --quiet
+
+      - name: Construir imagens Docker
+        run: docker compose build
