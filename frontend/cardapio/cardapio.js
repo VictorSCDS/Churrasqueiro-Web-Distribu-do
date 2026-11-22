@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
-      const res = await fetch('http://localhost:8083/api/pedidos', {
+      const res = await fetch('/api/pedidos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payloadBackend),
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
           numero = criado.id;
         }
       }
-    } catch (_) {}
+    } catch (_) { }
 
     const novoPedido = {
       id: numero,
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('churrasqueiro_pedidos', JSON.stringify(historico));
       localStorage.setItem('churrasqueiro_ultimo_pedido_id', String(numero));
       window.dispatchEvent(new Event('storage'));
-    } catch (_) {}
+    } catch (_) { }
 
     salvarSacola([]);
     sacolaBackdrop.style.display = 'none';
@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (statDisponiveis) statDisponiveis.textContent = stats.disponiveis;
         if (statEsgotados) statEsgotados.textContent = stats.esgotados;
       }
-    } catch (_) {}
+    } catch (_) { }
   }
 
   async function renderizarGridProdutos() {

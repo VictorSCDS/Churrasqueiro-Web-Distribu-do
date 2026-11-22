@@ -108,12 +108,46 @@ services:
       - churrasqueiro-net
     restart: unless-stopped
 
+  pedidos-service-2:
+    build:
+      context: ./backend/pedidos-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/churrasqueiro_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SERVER_PORT: 8083
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - churrasqueiro-net
+    restart: unless-stopped
+
+  pedidos-service-3:
+    build:
+      context: ./backend/pedidos-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/churrasqueiro_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SERVER_PORT: 8083
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - churrasqueiro-net
+    restart: unless-stopped
+
   frontend:
     build:
       context: ./frontend
     container_name: frontend-churrasqueiro
     ports:
       - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - gestao-service
       - cardapio-service
