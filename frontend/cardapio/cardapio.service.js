@@ -1,4 +1,4 @@
-const CARDAPIO_API_URL = 'http://localhost:8082/api/produtos';
+const CARDAPIO_API_URL = '/api/produtos';
 const STORAGE_KEY = 'churrasqueiro_cardapio_itens';
 
 const ITENS_INICIAIS = [
@@ -169,7 +169,7 @@ class CardapioService {
           return this._aplicarFiltros(itensNormalizados, filtros);
         }
       }
-    } catch (_) {}
+    } catch (_) { }
 
     const itens = this._obterTodosDoStorage();
     return this._aplicarFiltros(itens, filtros);
@@ -251,8 +251,8 @@ class CardapioService {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(produtoSalvo)
-      }).catch(() => {});
-    } catch (_) {}
+      }).catch(() => { });
+    } catch (_) { }
 
     return produtoSalvo;
   }
@@ -270,8 +270,8 @@ class CardapioService {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ disponivel: itens[index].disponivel })
-      }).catch(() => {});
-    } catch (_) {}
+      }).catch(() => { });
+    } catch (_) { }
 
     return itens[index];
   }
@@ -282,8 +282,8 @@ class CardapioService {
     this._salvarTodosNoStorage(novosItens);
 
     try {
-      fetch(`${CARDAPIO_API_URL}/${id}`, { method: 'DELETE' }).catch(() => {});
-    } catch (_) {}
+      fetch(`${CARDAPIO_API_URL}/${id}`, { method: 'DELETE' }).catch(() => { });
+    } catch (_) { }
 
     return true;
   }
